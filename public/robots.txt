@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ais-dev-wtrimvrx2lqjsy2aapwcy4-657510717067.us-east1.run.app/sitemap.xml
+Sitemap: https://sandiego.theskiawards.com/sitemap.xml
