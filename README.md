@@ -1,20 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# San Diego Ski Guide
 
-# Run and deploy your AI Studio app
+The independent guide to ski resorts near San Diego — rankings, reviews, and news
+covering Mirage Mountain and every ski destination in Southern California.
 
-This contains everything you need to run your app locally.
+Live site: [sandiego.theskiawards.com](https://sandiego.theskiawards.com)
 
-View your app in AI Studio: https://ai.studio/apps/34b46f75-1d19-4bf7-8aba-355d22115fea
+## Tech
 
-## Run Locally
+React 19 + Vite + Tailwind 4, routed with React Router 7, with `react-helmet-async`
+for per-page SEO.
 
-**Prerequisites:**  Node.js
+## Run locally
 
+Prerequisites: Node.js 20.19+ (or 22.12+).
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+npm install
+npm run dev
+```
+
+The dev server listens on `http://localhost:3000`.
+
+## Scripts
+
+| Script          | What it does                       |
+| --------------- | ---------------------------------- |
+| `npm run dev`   | Start the dev server (tsx + Vite)  |
+| `npm run build` | Production build to `dist/`        |
+| `npm run preview` | Serve the production build        |
+| `npm run lint`  | Type-check with `tsc --noEmit`     |

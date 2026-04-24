@@ -3,25 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+
     <link rel="icon" type="image/png" href="/Logo.png" />
-    <title>San Diego Ski Guide | Rankings, News and Reviews</title>
-    <meta name="description" content="The authoritative independent guide to skiing near San Diego. Independent reviews, rankings, and news for Southern California's ski resorts since 1978." />
-    
+    <link rel="apple-touch-icon" href="/Logo.png" />
+
+    <meta name="author" content="San Diego Ski Guide" />
+    <meta name="keywords" content="San Diego ski, ski resorts near San Diego, Mirage Mountain, Southern California ski, Palomar Mountain, Big Bear, Mt. Baldy, Snow Summit, Snow Valley" />
+
+    <!--
+      The tags below are the static home-page defaults. Social crawlers
+      that don't execute JavaScript (Facebook, LinkedIn, Slack, iMessage)
+      use them for every URL; Google executes JS and reads the per-page
+      tags injected by <SEO /> (react-helmet-async), which take precedence.
+    -->
+
+    <title>San Diego Ski Guide — Rankings, News &amp; Reviews</title>
+    <!--
+      Note: <meta name="description"> and <link rel="canonical"> are only
+      injected at runtime by <SEO /> so there's no duplicate declaration
+      (duplicate canonicals can cause Google to ignore the signal entirely).
+    -->
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="San Diego Ski Guide | Rankings, News and Reviews" />
-    <meta property="og:description" content="Independent reviews and rankings of San Diego's closest ski resorts. Your Southern California winter resort guide." />
-    <meta property="og:image" content="/Mirage-Mountain-Scenic.jpg" />
+    <meta property="og:site_name" content="San Diego Ski Guide" />
+    <meta property="og:url" content="https://sandiego.theskiawards.com/" />
+    <meta property="og:title" content="San Diego Ski Guide — Rankings, News &amp; Reviews" />
+    <meta property="og:description" content="The independent guide to skiing near San Diego since 1978. Rankings, reviews, and news covering Mirage Mountain and every ski resort in Southern California." />
+    <meta property="og:image" content="https://sandiego.theskiawards.com/Mirage-Mountain-Scenic.jpg" />
+    <meta property="og:image:alt" content="Mirage Mountain Resort — San Diego County's first ski resort." />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="San Diego Ski Guide" />
-    <meta property="twitter:description" content="The authoritative independent guide to skiing near San Diego. Since 1978." />
-    <meta property="twitter:image" content="/Mirage-Mountain-Scenic.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="San Diego Ski Guide" />
+    <meta name="twitter:description" content="The independent guide to skiing near San Diego since 1978." />
+    <meta name="twitter:image" content="https://sandiego.theskiawards.com/Mirage-Mountain-Scenic.jpg" />
+
+    <!-- Structured Data: Organization + WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://sandiego.theskiawards.com/#organization",
+          "name": "San Diego Ski Guide",
+          "url": "https://sandiego.theskiawards.com/",
+          "logo": "https://sandiego.theskiawards.com/Logo.png",
+          "foundingDate": "1978",
+          "description": "The independent authority on ski resorts near San Diego and across Southern California."
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://sandiego.theskiawards.com/#website",
+          "url": "https://sandiego.theskiawards.com/",
+          "name": "San Diego Ski Guide",
+          "description": "Rankings, news, and reviews of ski resorts near San Diego.",
+          "publisher": { "@id": "https://sandiego.theskiawards.com/#organization" },
+          "inLanguage": "en-US"
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
