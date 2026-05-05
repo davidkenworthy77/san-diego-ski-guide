@@ -12,6 +12,8 @@ interface SEOProps {
   image?: string;
   type?: 'website' | 'article';
   publishedDate?: string;
+  /** Set true on 404 / soft-error pages so search engines don't index them. */
+  noIndex?: boolean;
 }
 
 /**
@@ -29,6 +31,7 @@ export const SEO: React.FC<SEOProps> = ({
   image = DEFAULT_IMAGE,
   type = 'website',
   publishedDate,
+  noIndex = false,
 }) => {
   const url = `${SITE_URL}${path}`;
   const absoluteImage = image.startsWith('http')
@@ -39,7 +42,11 @@ export const SEO: React.FC<SEOProps> = ({
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
-      <link rel="canonical" href={url} />
+      {noIndex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <link rel="canonical" href={url} />
+      )}
 
       {/* Open Graph */}
       <meta property="og:type" content={type} />

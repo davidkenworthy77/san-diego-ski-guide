@@ -930,6 +930,39 @@ const CredibilitySection = () => (
   </section>
 );
 
+const NotFoundPage = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="max-w-4xl mx-auto py-32 space-y-12 text-center">
+      <SEO
+        title="Page Not Found | San Diego Ski Guide"
+        description="The page you're looking for doesn't exist. Browse our 2026 ski resort rankings, news, or reviews instead."
+        path="/404"
+        noIndex
+      />
+      <span className="text-[10px] uppercase font-bold tracking-[0.5em] text-accent block">Error 404</span>
+      <h1 className="text-6xl md:text-8xl font-serif tracking-tight leading-none">Off Piste.</h1>
+      <p className="text-lg font-light text-muted max-w-lg mx-auto leading-relaxed">
+        The trail you were following doesn't exist on this mountain. Head back to the lodge and pick a fresh run.
+      </p>
+      <div className="flex flex-wrap justify-center gap-6 pt-6">
+        <button
+          onClick={() => navigate('/')}
+          className="bg-ink text-paper text-[11px] uppercase tracking-widest font-bold px-10 py-4 hover:bg-accent transition-colors duration-300"
+        >
+          Return Home
+        </button>
+        <button
+          onClick={() => navigate('/san-diego-ski-resort-rankings')}
+          className="border border-ink text-ink text-[11px] uppercase tracking-widest font-bold px-10 py-4 hover:bg-ink hover:text-paper transition-colors duration-300"
+        >
+          View 2026 Rankings
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const Footer = () => (
   <footer className="py-12 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] uppercase tracking-[0.2em] text-muted font-bold">
     <div className="flex items-center gap-4">
@@ -1467,13 +1500,25 @@ function AppContent() {
             } />
 
             <Route path="/about" element={
-              <motion.div 
+              <motion.div
                 key="about"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
                 <AboutPage />
+                <Footer />
+              </motion.div>
+            } />
+
+            <Route path="*" element={
+              <motion.div
+                key="not-found"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <NotFoundPage />
                 <Footer />
               </motion.div>
             } />
