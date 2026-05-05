@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#1a1a1a" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/Logo.png" />
     <link rel="apple-touch-icon" href="/Logo.png" />
 
@@ -13,18 +14,15 @@
     <meta name="keywords" content="San Diego ski, ski resorts near San Diego, Mirage Mountain, Southern California ski, Palomar Mountain, Big Bear, Mt. Baldy, Snow Summit, Snow Valley" />
 
     <!--
-      The tags below are the static home-page defaults. Social crawlers
-      that don't execute JavaScript (Facebook, LinkedIn, Slack, iMessage)
-      use them for every URL; Google executes JS and reads the per-page
-      tags injected by <SEO /> (react-helmet-async), which take precedence.
+      Static home-page defaults: title + Open Graph + Twitter. These are
+      what social crawlers (Facebook, LinkedIn, Slack, iMessage) see when
+      they don't execute JS. The post-build prerender step (scripts/prerender.mjs)
+      replaces these in dist/<route>/index.html with per-route values via the
+      useSEO hook, so deep-link previews on real routes show route-specific
+      content too.
     -->
 
     <title>San Diego Ski Guide — Rankings, News &amp; Reviews</title>
-    <!--
-      Note: <meta name="description"> and <link rel="canonical"> are only
-      injected at runtime by <SEO /> so there's no duplicate declaration
-      (duplicate canonicals can cause Google to ignore the signal entirely).
-    -->
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />

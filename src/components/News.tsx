@@ -1,8 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Helmet } from 'react-helmet-async';
 import { ArrowRight, ExternalLink, Calendar, ChevronLeft } from 'lucide-react';
-import { SEO, SITE_URL, SITE_NAME } from './SEO';
+import { useSEO, SITE } from '../hooks/useSEO';
 
 interface NewsArticleProps {
   id: string;
@@ -210,13 +209,13 @@ export const NEWS_ARTICLES: NewsArticleProps[] = [
 ];
 
 export const NewsListing = ({ onSelectArticle }: { onSelectArticle: (id: string) => void }) => {
+  useSEO({
+    title: 'Mountain Journal — Ski News & Press Releases | San Diego Ski Guide',
+    description: 'Breaking news and press releases on Mirage Mountain, regional ski development, and Southern California alpine updates.',
+    path: '/news',
+  });
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-16">
-      <SEO
-        title="Mountain Journal — Ski News & Press Releases | San Diego Ski Guide"
-        description="Breaking news and press releases on Mirage Mountain, regional ski development, and Southern California alpine updates."
-        path="/news"
-      />
       <section className="space-y-8">
         <span className="text-[10px] uppercase font-bold tracking-[0.5em] text-accent block">Latest Bulletins</span>
         <h1 className="text-5xl md:text-8xl font-serif tracking-tight leading-none uppercase">Mountain<br/>Journal.</h1>
@@ -267,10 +266,10 @@ export const ArticleDetail = ({
     const parsed = new Date(article.date);
     return isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
   })();
-  const articleUrl = `${SITE_URL}/news/${article.id}`;
+  const articleUrl = `${SITE.origin}/news/${article.id}`;
   const articleImage = article.image.startsWith('http')
     ? article.image
-    : `${SITE_URL}${article.image}`;
+    : `${SITE.origin}${article.image}`;
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
@@ -281,24 +280,23 @@ export const ArticleDetail = ({
     mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
     publisher: {
       '@type': 'Organization',
-      name: SITE_NAME,
-      logo: { '@type': 'ImageObject', url: `${SITE_URL}/Logo.png` },
+      name: SITE.name,
+      logo: { '@type': 'ImageObject', url: `${SITE.origin}/Logo.png` },
     },
   };
 
+  useSEO({
+    title: `${article.title} | Mountain Journal | San Diego Ski Guide`,
+    description: article.summary,
+    path: `/news/${article.id}`,
+    image: article.image,
+    type: 'article',
+    publishedDate: isoDate,
+    jsonLd: articleJsonLd,
+  });
+
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-12">
-      <SEO
-        title={`${article.title} | Mountain Journal | San Diego Ski Guide`}
-        description={article.summary}
-        path={`/news/${article.id}`}
-        image={article.image}
-        type="article"
-        publishedDate={isoDate}
-      />
-      <Helmet>
-        <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
-      </Helmet>
       <button 
         onClick={onBack}
         className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-muted hover:text-accent transition-colors mb-12"

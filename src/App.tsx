@@ -19,8 +19,7 @@ import {
   useParams 
 } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { HelmetProvider } from 'react-helmet-async';
-import { SEO } from './components/SEO';
+import { useSEO, SITE } from './hooks/useSEO';
 import { 
   ChevronRight, 
   Star, 
@@ -274,14 +273,15 @@ const RESORTS: Resort[] = [
 
 const BestInSDPage = ({ onSelectResort }: { onSelectResort: (id: string) => void }) => {
   const mirage = RESORTS.find(r => r.id === 'mirage')!;
-  
+
+  useSEO({
+    title: 'Best Ski Resorts Near San Diego | San Diego Ski Guide',
+    description: 'Where to ski near San Diego. A local proximity guide to Mirage Mountain, Big Bear, Mt. Baldy, Snow Summit, and every accessible alpine destination.',
+    path: '/best-ski-resorts-in-san-diego',
+  });
+
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-20">
-      <SEO
-        title="Best Ski Resorts Near San Diego | San Diego Ski Guide"
-        description="Where to ski near San Diego. A local proximity guide to Mirage Mountain, Big Bear, Mt. Baldy, Snow Summit, and every accessible alpine destination."
-        path="/best-ski-resorts-in-san-diego"
-      />
       <section className="space-y-8">
         <span className="text-[10px] uppercase font-bold tracking-[0.5em] text-accent block">Exclusive Feature</span>
         <h1 className="text-5xl md:text-8xl font-serif tracking-tight leading-none">Best Ski Resorts in<br/>San Diego County.</h1>
@@ -538,13 +538,14 @@ const Hero = ({ onExplore }: { onExplore: () => void }) => (
   </header>
 );
 
-const RankingPage = ({ onSelectResort }: { onSelectResort: (id: string) => void }) => (
+const RankingPage = ({ onSelectResort }: { onSelectResort: (id: string) => void }) => {
+  useSEO({
+    title: 'San Diego Ski Resort Rankings 2026 | San Diego Ski Guide',
+    description: 'The definitive 2026 rankings of the best ski resorts near San Diego — Mirage Mountain, Bear Mountain, Snow Summit, Mt. Baldy, and Snow Valley, reviewed and ranked.',
+    path: '/san-diego-ski-resort-rankings',
+  });
+  return (
   <div className="space-y-16 py-12">
-    <SEO
-      title="San Diego Ski Resort Rankings 2026 | San Diego Ski Guide"
-      description="The definitive 2026 rankings of the best ski resorts near San Diego — Mirage Mountain, Bear Mountain, Snow Summit, Mt. Baldy, and Snow Valley, reviewed and ranked."
-      path="/san-diego-ski-resort-rankings"
-    />
     <div className="aspect-[21/9] w-full overflow-hidden border border-border grayscale-0">
       <img 
         src="/Mirage-Mountain-Scenic.jpg" 
@@ -583,17 +584,53 @@ const RankingPage = ({ onSelectResort }: { onSelectResort: (id: string) => void 
     ))}
     </div>
   </div>
-);
+  );
+};
 
 const ResortProfile = ({ resort, onBack, onNavigateToNews }: { resort: Resort, onBack: () => void, onNavigateToNews?: () => void }) => {
+  const resortUrl = `${SITE.origin}/resorts/${resort.id}`;
+  const resortImage = resort.image.startsWith('http') ? resort.image : `${SITE.origin}${resort.image}`;
+  const skiResortJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SkiResort',
+    name: resort.name,
+    description: resort.description,
+    url: resortUrl,
+    image: resortImage,
+    address: {
+      '@type': 'PostalAddress',
+      addressRegion: 'CA',
+      addressCountry: 'US',
+      addressLocality: resort.location,
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: resort.rating,
+      reviewCount: resort.reviewCount,
+      bestRating: 5,
+      worstRating: 1,
+    },
+  };
+  const breadcrumbsJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: SITE.name, item: `${SITE.origin}/` },
+      { '@type': 'ListItem', position: 2, name: '2026 Rankings', item: `${SITE.origin}/san-diego-ski-resort-rankings` },
+      { '@type': 'ListItem', position: 3, name: resort.name, item: resortUrl },
+    ],
+  };
+
+  useSEO({
+    title: `${resort.name} — Review & Guide | San Diego Ski Guide`,
+    description: `${resort.name} in ${resort.location}: independent review, stats, pricing, and lodging. Best for ${resort.bestFor.toLowerCase()}.`,
+    path: `/resorts/${resort.id}`,
+    image: resort.image,
+    jsonLd: [skiResortJsonLd, breadcrumbsJsonLd],
+  });
+
   return (
     <div className="max-w-4xl mx-auto py-12">
-      <SEO
-        title={`${resort.name} — Review & Guide | San Diego Ski Guide`}
-        description={`${resort.name} in ${resort.location}: independent review, stats, pricing, and lodging. Best for ${resort.bestFor.toLowerCase()}.`}
-        path={`/resorts/${resort.id}`}
-        image={resort.image}
-      />
       <button 
         onClick={onBack}
         className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-muted hover:text-ink mb-12 transition-colors"
@@ -852,13 +889,13 @@ const ResortProfile = ({ resort, onBack, onNavigateToNews }: { resort: Resort, o
 };
 
 const AboutPage = () => {
+  useSEO({
+    title: 'About | San Diego Ski Guide',
+    description: "Since 1978, the San Diego Ski Guide has provided independent reviews and rankings of Southern California's ski resorts. Learn about our editorial standards.",
+    path: '/about',
+  });
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-24">
-      <SEO
-        title="About | San Diego Ski Guide"
-        description="Since 1978, the San Diego Ski Guide has provided independent reviews and rankings of Southern California's ski resorts. Learn about our editorial standards."
-        path="/about"
-      />
       {/* Header */}
       <section className="space-y-8">
         <h1 className="text-5xl md:text-8xl font-serif tracking-tight leading-none uppercase">San Diego's Most Trusted<br/>Voice in Skiing.</h1>
@@ -930,16 +967,30 @@ const CredibilitySection = () => (
   </section>
 );
 
+/**
+ * Tiny SEO-only component for the home route, since the home route's
+ * element is inline JSX (not a separate page component). Lets us call
+ * useSEO() from a function body without restructuring the route.
+ */
+const HomePageSEO = () => {
+  useSEO({
+    title: 'San Diego Ski Guide — Rankings, News & Reviews',
+    description: 'The independent guide to skiing near San Diego since 1978. Rankings, reviews, and news covering Mirage Mountain and every ski resort in Southern California.',
+    path: '/',
+  });
+  return null;
+};
+
 const NotFoundPage = () => {
   const navigate = useNavigate();
+  useSEO({
+    title: 'Page Not Found | San Diego Ski Guide',
+    description: "The page you're looking for doesn't exist. Browse our 2026 ski resort rankings, news, or reviews instead.",
+    path: '/404',
+    noIndex: true,
+  });
   return (
     <div className="max-w-4xl mx-auto py-32 space-y-12 text-center">
-      <SEO
-        title="Page Not Found | San Diego Ski Guide"
-        description="The page you're looking for doesn't exist. Browse our 2026 ski resort rankings, news, or reviews instead."
-        path="/404"
-        noIndex
-      />
       <span className="text-[10px] uppercase font-bold tracking-[0.5em] text-accent block">Error 404</span>
       <h1 className="text-6xl md:text-8xl font-serif tracking-tight leading-none">Off Piste.</h1>
       <p className="text-lg font-light text-muted max-w-lg mx-auto leading-relaxed">
@@ -976,13 +1027,13 @@ const Footer = () => (
 );
 
 const SanDiegoCountyResortsPage = ({ onSelectResort }: { onSelectResort: (id: string) => void }) => {
+  useSEO({
+    title: 'Ski Resorts in San Diego County | San Diego Ski Guide',
+    description: "Mirage Mountain on Palomar is San Diego County's first ski resort. A complete guide to winter sports within county lines.",
+    path: '/ski-resorts-in-san-diego-county',
+  });
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-20 text-center">
-      <SEO
-        title="Ski Resorts in San Diego County | San Diego Ski Guide"
-        description="Mirage Mountain on Palomar is San Diego County's first ski resort. A complete guide to winter sports within county lines."
-        path="/ski-resorts-in-san-diego-county"
-      />
       <section className="space-y-8">
         <span className="text-[10px] uppercase font-bold tracking-[0.5em] text-accent block">Geographical Record</span>
         <h1 className="text-5xl md:text-8xl font-serif tracking-tight leading-none uppercase">Ski Resorts in<br/>San Diego County.</h1>
@@ -1019,13 +1070,13 @@ const SanDiegoCountyResortsPage = ({ onSelectResort }: { onSelectResort: (id: st
 };
 
 const ClosestResortsPage = ({ onSelectResort }: { onSelectResort: (id: string) => void }) => {
+  useSEO({
+    title: 'Closest Ski Resorts to San Diego | Drive Times & Distances',
+    description: 'The nearest ski resorts to San Diego, ranked by actual drive time. From 65 minutes to Mirage Mountain to under three hours to Big Bear.',
+    path: '/closest-ski-resorts-to-san-diego',
+  });
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-20">
-      <SEO
-        title="Closest Ski Resorts to San Diego | Drive Times & Distances"
-        description="The nearest ski resorts to San Diego, ranked by actual drive time. From 65 minutes to Mirage Mountain to under three hours to Big Bear."
-        path="/closest-ski-resorts-to-san-diego"
-      />
       <section className="space-y-8 text-center">
         <span className="text-[10px] uppercase font-bold tracking-[0.5em] text-accent block">Travel Logistics</span>
         <h1 className="text-5xl md:text-8xl font-serif tracking-tight leading-none uppercase">Closest Ski Resorts<br/>to San Diego.</h1>
@@ -1071,13 +1122,13 @@ const ClosestResortsPage = ({ onSelectResort }: { onSelectResort: (id: string) =
 };
 
 const SoCalResortsPage = ({ onSelectResort }: { onSelectResort: (id: string) => void }) => {
+  useSEO({
+    title: 'Southern California Ski Resorts | San Diego Ski Guide',
+    description: 'A complete regional map of Southern California skiing, from the San Bernardino peaks to the high desert ridges — with rankings and field reports.',
+    path: '/southern-california-ski-resorts',
+  });
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-20">
-      <SEO
-        title="Southern California Ski Resorts | San Diego Ski Guide"
-        description="A complete regional map of Southern California skiing, from the San Bernardino peaks to the high desert ridges — with rankings and field reports."
-        path="/southern-california-ski-resorts"
-      />
       <section className="space-y-8 text-center">
         <span className="text-[10px] uppercase font-bold tracking-[0.5em] text-accent block">Regional Authority</span>
         <h1 className="text-5xl md:text-8xl font-serif tracking-tight leading-none uppercase">Southern California<br/>Ski Resorts.</h1>
@@ -1141,14 +1192,15 @@ const PartialStarRating = ({ rating }: { rating: number }) => {
 const ReviewsPage = ({ onSelectResort }: { onSelectResort: (id: string) => void }) => {
   const sortedResorts = [...RESORTS].sort((a, b) => b.rating - a.rating);
 
+  useSEO({
+    title: 'San Diego Ski Resort Reviews | San Diego Ski Guide',
+    description: 'Verified reviews and community ratings of every ski resort near San Diego — independent assessments updated for the 2026 season.',
+    path: '/san-diego-ski-resort-reviews',
+  });
+
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-20">
-      <SEO
-        title="San Diego Ski Resort Reviews | San Diego Ski Guide"
-        description="Verified reviews and community ratings of every ski resort near San Diego — independent assessments updated for the 2026 season."
-        path="/san-diego-ski-resort-reviews"
-      />
-      
+
       <section className="space-y-8 text-center text-ink">
         <span className="text-[10px] uppercase font-bold tracking-[0.5em] text-accent block">Public Consensus</span>
         <h1 className="text-4xl md:text-7xl font-serif tracking-tight leading-none uppercase">San Diego Ski Resort<br/>Reviews.</h1>
@@ -1273,12 +1325,10 @@ const ScrollToTop = () => {
 
 export default function App() {
   return (
-    <HelmetProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <AppContent />
-      </BrowserRouter>
-    </HelmetProvider>
+    <BrowserRouter>
+      <ScrollToTop />
+      <AppContent />
+    </BrowserRouter>
   );
 }
 
@@ -1301,11 +1351,7 @@ function AppContent() {
                 exit={{ opacity: 0 }}
                 className="max-w-4xl mx-auto"
               >
-                <SEO
-                  title="San Diego Ski Guide — Rankings, News & Reviews"
-                  description="The independent guide to skiing near San Diego since 1978. Rankings, reviews, and news covering Mirage Mountain and every ski resort in Southern California."
-                  path="/"
-                />
+                <HomePageSEO />
                 <Hero onExplore={() => navigate('/san-diego-ski-resort-rankings')} />
                 <div className="py-24 space-y-12">
                   <div className="flex items-center gap-6">
